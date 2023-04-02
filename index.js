@@ -1,4 +1,5 @@
 const express = require("express");
+const { default: inquirer } = require("inquirer");
 
 const mysql = require("mysql2");
 
@@ -19,19 +20,59 @@ const db = mysql.createConnections(
     console.log("connected to the database")
 );
 
+db.connect((err) => {
+    if (err) throw err;
+    startApp();
+});
 
+startApp = () => {
+    inquirer.prompt([
+        {
+            name: "getStarted",
+            type: "rawlist",
+            message: "Welcome to the employee tracker program. What would you like to do?",
+            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Exit program"]
+        }
+    ]).then((response) => {
+        switch(response.getStarted) {
+            case "View all departments":
+                viewAllDepartments();
+                break;
+            case "View all roles":
+                viewAllRoles();
+                break;
+            case "View all employees":
+                viewAllEmployees();
+                break;
+            case 'Add a department':
+                addADepartment();
+                break;
+            case 'Add a role':
+                addARole();
+                break;
+            case 'Add an employee':
+                addAnEmployee();
+                break;
+            case 'Update employee\'s role':
+                updateEmployeeRole();
+                break;
+            case "Exit program":
+                Connection.ends();
+                console.log("\n Program has ended. Thanks for using! \n");
+                return;
+            default:
+                break;
+        }
+    })
+}
 
-// app.get("/creatdb", (req,res) =>{
-//     let sql = "Create database";
-
-//     db.query(sql,(err) =>{
-//         if(err){
-//             throw err;
-//         }
-//         res.send("Database created");
-//     });
-// });
-
+viewAllDepartments = () => {
+    Connection.query("SELECT * FROM department ORDER BY department_id ASC;" , (err,res) =>{
+        if (err) throw err;
+        console.table("\n", res, "\n");
+        startApp();
+    })
+};
 
 // created department
 app.post("/createdepartment", (req,res) =>{
