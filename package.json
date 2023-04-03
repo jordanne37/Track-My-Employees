@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/jordanne37/Track-My-Employees/issues"
   },
-  "homepage": "https://github.com/jordanne37/Track-My-Employees#readme"
+  "homepage": "https://github.com/jordanne37/Track-My-Employees#readme",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "mysql2": "^3.2.0"
+  }
 }
