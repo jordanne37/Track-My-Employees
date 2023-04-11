@@ -12,7 +12,7 @@ app.use(express.json());
 // connection database
 const db = mysql.createConnection(
     {
-    host: "JordanAnne",
+    host: "localhost",
     user: "root",
     password: "Jimmy2021!",
     database: "trackerdb",
@@ -67,7 +67,7 @@ startApp = () => {
 }
 
 viewAllDepartments = () => {
-    connection.query("SELECT * FROM department ORDER BY department_id ASC;" , (err,res) =>{
+    connection.query("SELECT * FROM department ORDER BY id ASC;" , (err,res) =>{
         if (err) throw err;
         console.table("\n", res, "\n");
         startApp();
@@ -239,54 +239,5 @@ updateEmployeeRole = () => {
         })
     })
 }
-
-
-
-
-
-
-
-
-
-// // created department
-// app.post("/createdepartment", (req,res) =>{
-//     let sql =
-//     "CREATE TABLE department(id INT PRIMARY KEY, name VARCHAR(30))";
-
-//     db.query(sql,(err) =>{
-//         if(err){
-//             throw err;
-//         }
-//         res.send("department table made")
-//     });
-// });
-
-
-// // create role
-// app.post("/createrole", (req,res) =>{
-//     let sql =
-//     "CREATE TABLE role(id INT PRIMARY KEY, title VARCHAR(30), salary DECIMAL, department_id INT)";
-
-//     db.query(sql,(err) =>{
-//         if(err){
-//             throw err;
-//         }
-//         res.send("role table made")
-//     });
-// });
-
-
-
-// // created employee
-// app.post("/createemployee", (req,res) =>{
-//     const sql = "CREATE TABLE employee(id INT PRIMARY KEY, first_name VARCHAR(30), last_name VARCHAR(30), role_id INT, manager_id INT)";
-
-//     db.query(sql,(err) =>{
-//         if(err){
-//             throw err;
-//         }
-//         res.send("Employee table made")
-//     });
-// });
 
 
