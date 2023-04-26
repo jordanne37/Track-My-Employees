@@ -67,21 +67,21 @@ startApp = () => {
 }
 
 viewAllDepartments = () => {
-    connection.query("SELECT * FROM department ORDER BY id ASC;" , (err,res) =>{
+    db.query("SELECT * FROM department ORDER BY id ASC;" , (err,res) =>{
         if (err) throw err;
         console.table("\n", res, "\n");
         startApp();
     })
 };
 viewAllRoles = () => {
-    connection.query(`SELECT role.role_id, role.title, role.salary, department.department_name, department.department_id FROM role JOIN department ON role.department_id = department.department_id ORDER BY role.role_id ASC;`, (err, res) => {
+    db.query(`SELECT role.role_id, role.title, role.salary, department.department_name, department.department_id FROM role JOIN department ON role.department_id = department.department_id ORDER BY role.role_id ASC;`, (err, res) => {
         if (err) throw err;
         console.table('\n', res, '\n');
         startApp();
     })
 };
 viewAllEmployees = () => {
-    connection.query(`SELECT e.employee_id, e.first_name, e.last_name, role.title, department.department_name, role.salary, CONCAT(m.first_name, ' ', m.last_name) manager FROM employee m RIGHT JOIN employee e ON e.manager_id = m.employee_id JOIN role ON e.role_id = role.role_id JOIN department ON department.department_id = role.department_id ORDER BY e.employee_id ASC;`, (err, res) => {
+    db.query(`SELECT e.employee_id, e.first_name, e.last_name, role.title, department.department_name, role.salary, CONCAT(m.first_name, ' ', m.last_name) manager FROM employee m RIGHT JOIN employee e ON e.manager_id = m.employee_id JOIN role ON e.role_id = role.role_id JOIN department ON department.department_id = role.department_id ORDER BY e.employee_id ASC;`, (err, res) => {
         if (err) throw err;
         console.table('\n', res, '\n');
         startApp();
@@ -97,7 +97,7 @@ addADepartment = () => {
         message: 'What is the name of the department you are adding?'   
         }
     ]).then((response) => {
-        connection.query(`INSERT INTO department SET ?`, 
+        db.query(`INSERT INTO department SET ?`, 
         {
             department_name: response.newDept,
         },
@@ -110,7 +110,7 @@ addADepartment = () => {
 };
 
 addARole = () => {
-    connection.query(`SELECT * FROM department;`, (err, res) => {
+    db.query(`SELECT * FROM department;`, (err, res) => {
         if (err) throw err;
         let departments = res.map(department => ({name: department.department_name, value: department.department_id }));
         inquirer.prompt([
@@ -131,7 +131,7 @@ addARole = () => {
             choices: departments
             },
         ]).then((response) => {
-            connection.query(`INSERT INTO role SET ?`, 
+            db.query(`INSERT INTO role SET ?`, 
             {
                 title: response.title,
                 salary: response.salary,
@@ -147,10 +147,10 @@ addARole = () => {
 };
 
 addAnEmployee = () => {
-    connection.query(`SELECT * FROM role;`, (err, res) => {
+    db.query(`SELECT * FROM role;`, (err, res) => {
         if (err) throw err;
         let roles = res.map(role => ({name: role.title, value: role.role_id }));
-        connection.query(`SELECT * FROM employee;`, (err, res) => {
+        db.query(`SELECT * FROM employee;`, (err, res) => {
             if (err) throw err;
             let employees = res.map(employee => ({name: employee.first_name + ' ' + employee.last_name, value: employee.employee_id}));
             inquirer.prompt([
@@ -177,7 +177,7 @@ addAnEmployee = () => {
                     choices: employees
                 }
             ]).then((response) => {
-                connection.query(`INSERT INTO employee SET ?`, 
+                db.query(`INSERT INTO employee SET ?`, 
                 {
                     first_name: response.firstName,
                     last_name: response.lastName,
@@ -187,7 +187,7 @@ addAnEmployee = () => {
                 (err, res) => {
                     if (err) throw err;
                 })
-                connection.query(`INSERT INTO role SET ?`, 
+                db.query(`INSERT INTO role SET ?`, 
                 {
                     department_id: response.dept,
                 }, 
@@ -201,10 +201,10 @@ addAnEmployee = () => {
     })
 };
 updateEmployeeRole = () => {
-    connection.query(`SELECT * FROM role;`, (err, res) => {
+    db.query(`SELECT * FROM role;`, (err, res) => {
         if (err) throw err;
         let roles = res.map(role => ({name: role.title, value: role.role_id }));
-        connection.query(`SELECT * FROM employee;`, (err, res) => {
+        db.query(`SELECT * FROM employee;`, (err, res) => {
             if (err) throw err;
             let employees = res.map(employee => ({name: employee.first_name + ' ' + employee.last_name, value: employee.employee_id }));
             inquirer.prompt([
@@ -221,7 +221,7 @@ updateEmployeeRole = () => {
                     choices: roles
                 },
             ]).then((response) => {
-                connection.query(`UPDATE employee SET ? WHERE ?`, 
+                db.query(`UPDATE employee SET ? WHERE ?`, 
                 [
                     {
                         role_id: response.newRole,
