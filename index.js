@@ -24,7 +24,7 @@ db.connect((err) => {
     if (err) throw err;
     startApp();
 });
-
+// starts application with a list of choices to pick from
 startApp = () => {
     inquirer.prompt([
         {
@@ -65,7 +65,7 @@ startApp = () => {
         }
     })
 }
-
+// shows all departments when prompted
 viewAllDepartments = () => {
     db.query("SELECT * FROM department ORDER BY id ASC;" , (err,res) =>{
         if (err) throw err;
@@ -73,6 +73,7 @@ viewAllDepartments = () => {
         startApp();
     })
 };
+// shows all roles when prompted
 viewAllRoles = () => {
     db.query(`SELECT * FROM role ORDER BY id ASC;`, (err, res) => {
         if (err) throw err;
@@ -80,6 +81,8 @@ viewAllRoles = () => {
         startApp();
     })
 };
+// shows all employees when prompted
+
 viewAllEmployees = () => {
     db.query(`SELECT * FROM employee ORDER BY id ASC;`, (err, res) => {
         if (err) throw err;
@@ -88,7 +91,7 @@ viewAllEmployees = () => {
     })
 };
 
-
+// can add department, roles, employees when prompted
 addADepartment = () => {
     inquirer.prompt([
         {
@@ -200,6 +203,8 @@ addAnEmployee = () => {
         })
     })
 };
+
+// can update a current employees information
 updateEmployeeRole = () => {
     db.query(`SELECT * FROM role;`, (err, res) => {
         if (err) throw err;
