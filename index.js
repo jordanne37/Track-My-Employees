@@ -74,14 +74,14 @@ viewAllDepartments = () => {
     })
 };
 viewAllRoles = () => {
-    db.query(`SELECT role.role_id, role.title, role.salary, department.department_name, department.department_id FROM role JOIN department ON role.department_id = department.department_id ORDER BY role.role_id ASC;`, (err, res) => {
+    db.query(`SELECT * FROM role ORDER BY id ASC;`, (err, res) => {
         if (err) throw err;
         console.table('\n', res, '\n');
         startApp();
     })
 };
 viewAllEmployees = () => {
-    db.query(`SELECT e.employee_id, e.first_name, e.last_name, role.title, department.department_name, role.salary, CONCAT(m.first_name, ' ', m.last_name) manager FROM employee m RIGHT JOIN employee e ON e.manager_id = m.employee_id JOIN role ON e.role_id = role.role_id JOIN department ON department.department_id = role.department_id ORDER BY e.employee_id ASC;`, (err, res) => {
+    db.query(`SELECT * FROM employee ORDER BY id ASC;`, (err, res) => {
         if (err) throw err;
         console.table('\n', res, '\n');
         startApp();
@@ -126,7 +126,7 @@ addARole = () => {
             },
             {
             name: 'deptName',
-            type: 'rawlist',
+            type: 'list',
             message: 'Which department do you want to add the new role to?',
             choices: departments
             },
@@ -149,10 +149,10 @@ addARole = () => {
 addAnEmployee = () => {
     db.query(`SELECT * FROM role;`, (err, res) => {
         if (err) throw err;
-        let roles = res.map(role => ({name: role.title, value: role.role_id }));
+        let roles = res.map(role => (role.title));
         db.query(`SELECT * FROM employee;`, (err, res) => {
             if (err) throw err;
-            let employees = res.map(employee => ({name: employee.first_name + ' ' + employee.last_name, value: employee.employee_id}));
+            let employees = res.map(employee => (employee.first_name + ' ' + employee.last_name));
             inquirer.prompt([
                 {
                     name: 'firstName',
@@ -166,7 +166,7 @@ addAnEmployee = () => {
                 },
                 {
                     name: 'role',
-                    type: 'rawlist',
+                    type: 'list',
                     message: 'What is the new employee\'s title?',
                     choices: roles
                 },
@@ -210,7 +210,7 @@ updateEmployeeRole = () => {
             inquirer.prompt([
                 {
                     name: 'employee',
-                    type: 'rawlist',
+                    type: 'list',
                     message: 'Which employee would you like to update the role for?',
                     choices: employees
                 },
